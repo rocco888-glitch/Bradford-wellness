@@ -1,920 +1,653 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bradford Wellness Centre</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bradford Wellness Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0A1410;
+  --deep:#0D1C17;
+  --mid:#142219;
+  --sage:#7A9E82;
+  --gold:#C4A882;
+  --cream:#EDE8DF;
+  --body:#8EA898;
+  --muted:#3D5E4A;
+}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--cream);font-family:'Inter',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
 
-    :root {
-      --bg:        #0B1A16;
-      --bg2:       #112219;
-      --bg3:       #0E1E1A;
-      --accent:    #8FAF8A;
-      --gold:      #C8A96E;
-      --sand:      #D6C9B4;
-      --body:      #A8B8A4;
-      --white:     #F0EBE1;
-      --muted:     #5C7A6A;
-    }
+/* custom cursor */
+.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+.cursor-dot{width:6px;height:6px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,0.5);border-radius:50%;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,border-color 0.3s}
+.cursor-ring.expand{width:60px;height:60px;border-color:rgba(255,255,255,0.8)}
 
-    html { scroll-behavior: smooth; }
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:32px 64px;transition:all 0.5s}
+nav.solid{background:rgba(10,20,16,0.96);padding:20px 64px;border-bottom:1px solid rgba(122,158,130,0.1)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:0.1em;color:var(--cream);font-weight:300}
+.logo em{font-style:normal;color:var(--sage)}
+.nav-links{display:flex;gap:44px;list-style:none}
+.nav-links a{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--body);text-decoration:none;transition:color 0.3s}
+.nav-links a:hover{color:var(--cream)}
+.nav-book{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);background:var(--sage);padding:11px 26px;text-decoration:none;transition:all 0.3s;font-family:'Inter',sans-serif}
+.nav-book:hover{background:var(--cream)}
 
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      overflow-x: hidden;
-    }
+/* HERO - parallax layers */
+.hero{position:relative;height:100vh;display:flex;align-items:center;overflow:hidden}
 
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 28px 60px;
-      background: linear-gradient(to bottom, rgba(11,26,22,0.95), transparent);
-      transition: background 0.4s;
-    }
-    nav.scrolled {
-      background: rgba(11,26,22,0.97);
-      padding: 18px 60px;
-      border-bottom: 1px solid rgba(143,175,138,0.1);
-    }
-    .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.25rem;
-      font-weight: 400;
-      letter-spacing: 0.08em;
-      color: var(--sand);
-    }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 40px; list-style: none; }
-    .nav-links a {
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--body);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    .nav-links a:hover { color: var(--white); }
-    .nav-cta {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--bg);
-      background: var(--accent);
-      padding: 10px 24px;
-      text-decoration: none;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .nav-cta:hover { background: var(--sand); transform: translateY(-1px); }
+.hero-layer{position:absolute;inset:0;will-change:transform}
 
-    /* ── HERO ── */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
+.layer-bg{
+  background:radial-gradient(ellipse 100% 100% at 65% 40%,rgba(74,120,90,0.15) 0%,transparent 65%),
+             radial-gradient(ellipse 60% 80% at 10% 90%,rgba(196,168,130,0.06) 0%,transparent 55%),
+             var(--ink);
+}
 
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(74,123,111,0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 80% at 20% 80%, rgba(143,175,138,0.06) 0%, transparent 60%),
-        var(--bg);
-    }
+/* floating botanical orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.12;will-change:transform}
+.orb-1{width:500px;height:500px;background:#4a7a5a;top:-100px;right:10%;animation:drift1 12s ease-in-out infinite}
+.orb-2{width:300px;height:300px;background:#c4a882;bottom:10%;left:5%;animation:drift2 16s ease-in-out infinite}
+.orb-3{width:200px;height:200px;background:#7a9e82;top:40%;right:30%;animation:drift3 10s ease-in-out infinite}
 
-    /* Botanical SVG texture */
-    .hero-botanical {
-      position: absolute;
-      right: -80px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 55vw;
-      max-width: 800px;
-      opacity: 0.07;
-      pointer-events: none;
-    }
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,20px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-15px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(-15px,25px)}}
 
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 1200px;
-      padding: 0 60px;
-      width: 100%;
-    }
+/* botanical line art - parallax */
+.botanical-art{position:absolute;right:-60px;top:0;bottom:0;width:52vw;opacity:0;will-change:transform}
 
-    .hero-eyebrow {
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 28px;
-      opacity: 0;
-    }
+.hero-content{position:relative;z-index:10;padding:0 64px;max-width:1280px;width:100%}
+.h-eyebrow{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sage);margin-bottom:32px;opacity:0;display:flex;align-items:center;gap:16px}
+.h-eyebrow::before{content:'';display:block;width:40px;height:1px;background:var(--sage)}
+.h-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3.8rem,7.5vw,7rem);font-weight:300;line-height:1.02;color:var(--cream);opacity:0;margin-bottom:36px}
+.h-title em{font-style:italic;color:var(--sage)}
+.h-body{font-size:0.92rem;line-height:1.85;color:var(--body);max-width:440px;opacity:0;margin-bottom:56px}
+.h-actions{display:flex;gap:24px;align-items:center;opacity:0}
+.btn-fill{display:inline-block;background:var(--sage);color:var(--ink);padding:16px 44px;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;font-weight:500;transition:all 0.3s}
+.btn-fill:hover{background:var(--cream);transform:translateY(-2px)}
+.btn-line{display:inline-flex;align-items:center;gap:12px;color:var(--body);font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;transition:color 0.3s}
+.btn-line:hover{color:var(--cream)}
+.btn-line-bar{width:32px;height:1px;background:currentColor;transition:width 0.4s}
+.btn-line:hover .btn-line-bar{width:56px}
 
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3.5rem, 7vw, 6.5rem);
-      font-weight: 300;
-      line-height: 1.05;
-      color: var(--sand);
-      margin-bottom: 32px;
-      opacity: 0;
-    }
+.hero-phone{position:absolute;bottom:48px;right:64px;z-index:10;text-align:right;opacity:0}
+.hero-phone-label{font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.hero-phone-num{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--cream);font-weight:300;text-decoration:none;display:block;transition:color 0.3s}
+.hero-phone-num:hover{color:var(--sage)}
 
-    .hero-title em {
-      font-style: italic;
-      color: var(--white);
-    }
+.scroll-indicator{position:absolute;bottom:48px;left:64px;z-index:10;display:flex;align-items:center;gap:14px;opacity:0}
+.scroll-indicator span{font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted)}
+.scroll-line{width:60px;height:1px;background:var(--muted);position:relative;overflow:hidden}
+.scroll-line::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--sage);animation:scan 2.5s ease-in-out infinite}
+@keyframes scan{0%{left:-100%}100%{left:100%}}
 
-    .hero-sub {
-      font-size: 1rem;
-      line-height: 1.8;
-      color: var(--body);
-      max-width: 480px;
-      margin-bottom: 52px;
-      opacity: 0;
-    }
+/* MARQUEE */
+.marquee-wrap{background:var(--sage);padding:18px 0;overflow:hidden;position:relative;z-index:20}
+.marquee-inner{display:flex;gap:0;white-space:nowrap;animation:marquee 20s linear infinite}
+.marquee-item{font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--ink);padding:0 48px;font-weight:500}
+.marquee-dot{color:rgba(10,20,16,0.4);margin:0 -20px}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-    .hero-actions {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-      opacity: 0;
-    }
+/* SERVICES - full viewport cards */
+.services-section{position:relative}
+.service-panel{position:relative;height:100vh;display:flex;align-items:center;overflow:hidden}
 
-    .btn-primary {
-      display: inline-block;
-      background: var(--accent);
-      color: var(--bg);
-      padding: 16px 40px;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-decoration: none;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .btn-primary:hover { background: var(--sand); transform: translateY(-2px); }
+.sp-bg{position:absolute;inset:0}
+.sp-bg-1{background:linear-gradient(135deg,var(--deep) 0%,#0f1f18 100%)}
+.sp-bg-2{background:linear-gradient(135deg,#0c1a15 0%,var(--mid) 100%)}
+.sp-bg-3{background:linear-gradient(135deg,var(--mid) 0%,#0a1812 100%)}
+.sp-bg-4{background:linear-gradient(135deg,#0d1c16 0%,var(--deep) 100%)}
+.sp-bg-5{background:linear-gradient(135deg,var(--deep) 0%,#101f18 100%)}
 
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--body);
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    .btn-ghost:hover { color: var(--white); }
-    .btn-ghost::after {
-      content: '';
-      display: block;
-      width: 30px;
-      height: 1px;
-      background: currentColor;
-      transition: width 0.3s;
-    }
-    .btn-ghost:hover::after { width: 50px; }
+.sp-art{position:absolute;opacity:0.04;pointer-events:none;will-change:transform}
 
-    .hero-scroll-line {
-      position: absolute;
-      bottom: 48px;
-      left: 60px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      opacity: 0;
-    }
-    .hero-scroll-line span {
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .scroll-bar {
-      width: 48px;
-      height: 1px;
-      background: var(--muted);
-      position: relative;
-      overflow: hidden;
-    }
-    .scroll-bar::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: var(--accent);
-      animation: scrollLine 2s ease-in-out infinite;
-    }
-    @keyframes scrollLine {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
+.sp-content{position:relative;z-index:5;padding:0 64px;max-width:1280px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
 
-    /* ── DIVIDER ── */
-    .section-divider {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(143,175,138,0.2), transparent);
-      margin: 0;
-    }
+.sp-left{}
+.sp-num{font-family:'Cormorant Garamond',serif;font-size:7rem;font-weight:300;line-height:1;color:rgba(122,158,130,0.08);margin-bottom:-40px;display:block}
+.sp-eyebrow{font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--sage);margin-bottom:20px}
+.sp-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,4.5vw,4rem);font-weight:300;color:var(--cream);line-height:1.1;margin-bottom:24px}
+.sp-title em{font-style:italic}
+.sp-desc{font-size:0.88rem;line-height:1.9;color:var(--body);margin-bottom:36px;max-width:420px}
 
-    /* ── INTRO STRIP ── */
-    .intro-strip {
-      background: var(--bg2);
-      padding: 80px 60px;
-      display: grid;
-      grid-template-columns: 1fr 2px 1fr 2px 1fr;
-      gap: 0;
-      max-width: 100%;
-    }
-    .intro-stat {
-      padding: 0 60px;
-      text-align: center;
-    }
-    .intro-stat:first-child { padding-left: 0; }
-    .intro-stat:last-child { padding-right: 0; }
-    .stat-number {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 3.5rem;
-      font-weight: 300;
-      color: var(--sand);
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-    .stat-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .stat-divider {
-      width: 1px;
-      background: rgba(143,175,138,0.15);
-      align-self: stretch;
-    }
+.sp-right{display:flex;flex-direction:column;gap:16px}
+.sp-tag-group{border-top:1px solid rgba(122,158,130,0.12);padding-top:20px}
+.sp-tag-label{font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.sp-tags{display:flex;flex-wrap:wrap;gap:8px}
+.sp-tag{font-size:0.65rem;letter-spacing:0.1em;color:var(--body);border:1px solid rgba(92,120,100,0.25);padding:7px 16px}
 
-    /* ── SERVICES ── */
-    .services {
-      padding: 120px 60px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+.sp-cta{display:inline-flex;align-items:center;gap:12px;color:var(--sage);font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(122,158,130,0.3);padding:14px 28px;transition:all 0.4s;margin-top:8px;width:fit-content}
+.sp-cta:hover{background:rgba(122,158,130,0.08);border-color:var(--sage)}
 
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 72px;
-    }
+/* PHILOSOPHY */
+.philosophy{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;background:var(--deep)}
+.phil-bg-orb{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);opacity:0.07;background:#7a9e82;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.phil-inner{position:relative;z-index:5;padding:120px 64px;max-width:1280px;margin:0 auto;width:100%}
+.phil-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:120px;align-items:start}
+.phil-sticky{position:sticky;top:40vh}
+.phil-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:300;font-style:italic;color:var(--cream);line-height:1.45;padding-left:28px;border-left:1px solid var(--sage);margin-bottom:48px}
+.phil-sig{font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--sage)}
+.phil-blocks{display:flex;flex-direction:column;gap:64px}
+.phil-block{}
+.phil-block-label{font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
+.phil-block-text{font-size:0.9rem;line-height:1.9;color:var(--body)}
 
-    .section-eyebrow {
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 16px;
-    }
+/* BOOKING */
+.booking{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:var(--ink)}
+.book-bg-art{position:absolute;inset:0;opacity:0.03;pointer-events:none}
+.book-inner{position:relative;z-index:5;text-align:center;padding:80px 64px;max-width:900px}
+.book-eyebrow{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sage);margin-bottom:36px;display:flex;align-items:center;justify-content:center;gap:20px}
+.book-eyebrow::before,.book-eyebrow::after{content:'';display:block;width:60px;height:1px;background:rgba(122,158,130,0.3)}
+.book-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:300;line-height:1.05;color:var(--cream);margin-bottom:28px}
+.book-title em{font-style:italic;color:var(--sage)}
+.book-sub{font-size:0.9rem;line-height:1.8;color:var(--body);margin-bottom:60px}
+.book-actions{display:flex;gap:20px;justify-content:center;margin-bottom:72px;flex-wrap:wrap}
+.book-contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:20px}
+.bc-item{padding:32px;background:var(--deep)}
+.bc-label{font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.bc-val{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--cream);line-height:1.4}
+.bc-val a{color:inherit;text-decoration:none;transition:color 0.3s}
+.bc-val a:hover{color:var(--sage)}
 
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.2rem, 4vw, 3.5rem);
-      font-weight: 300;
-      color: var(--sand);
-      line-height: 1.1;
-    }
+/* HOURS */
+.hours{background:var(--deep);padding:120px 64px;border-top:1px solid rgba(122,158,130,0.08)}
+.hours-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:100px}
+.hours-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--cream);margin-bottom:40px}
+.hours-list{list-style:none}
+.hours-list li{display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid rgba(122,158,130,0.07);font-size:0.82rem;color:var(--body)}
+.hours-list .day{color:var(--cream)}
+.hours-list .closed{color:var(--muted)}
+.addr{font-size:0.88rem;line-height:2;color:var(--body)}
+.addr a{color:var(--sage);text-decoration:none}
 
-    .section-title em { font-style: italic; color: var(--white); }
+/* FOOTER */
+footer{padding:36px 64px;border-top:1px solid rgba(122,158,130,0.07);display:flex;justify-content:space-between;align-items:center;background:var(--ink);flex-wrap:wrap;gap:16px}
+.foot-logo{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--muted);letter-spacing:0.05em}
+.foot-credit{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+.foot-credit a{color:var(--sage);text-decoration:none}
 
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-    }
+/* mobile */
+.mob-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:600;background:var(--sage);color:var(--ink);text-align:center;padding:18px;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;font-weight:500}
 
-    .service-card {
-      background: var(--bg2);
-      padding: 52px 44px;
-      position: relative;
-      overflow: hidden;
-      cursor: default;
-      transition: background 0.4s;
-    }
-    .service-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 2px;
-      height: 0;
-      background: var(--accent);
-      transition: height 0.5s ease;
-    }
-    .service-card:hover { background: var(--bg3); }
-    .service-card:hover::before { height: 100%; }
-
-    .service-number {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 28px;
-      font-style: italic;
-    }
-
-    .service-icon {
-      width: 36px;
-      height: 36px;
-      margin-bottom: 24px;
-      opacity: 0.6;
-    }
-
-    .service-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.7rem;
-      font-weight: 400;
-      color: var(--sand);
-      margin-bottom: 16px;
-      line-height: 1.2;
-    }
-
-    .service-desc {
-      font-size: 0.82rem;
-      line-height: 1.8;
-      color: var(--body);
-      margin-bottom: 28px;
-    }
-
-    .service-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tag {
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      border: 1px solid rgba(92,122,106,0.3);
-      padding: 5px 12px;
-    }
-
-    /* ── PHILOSOPHY ── */
-    .philosophy {
-      background: var(--bg2);
-      padding: 120px 60px;
-    }
-
-    .philosophy-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 100px;
-      align-items: center;
-    }
-
-    .philosophy-quote {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      font-weight: 300;
-      font-style: italic;
-      color: var(--sand);
-      line-height: 1.4;
-      position: relative;
-      padding-left: 32px;
-    }
-
-    .philosophy-quote::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 8px;
-      width: 2px;
-      height: calc(100% - 16px);
-      background: var(--accent);
-    }
-
-    .philosophy-text p {
-      font-size: 0.9rem;
-      line-height: 1.9;
-      color: var(--body);
-      margin-bottom: 20px;
-    }
-
-    /* ── BOOKING ── */
-    .booking {
-      padding: 140px 60px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .booking-bg {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(143,175,138,0.06) 0%, transparent 70%);
-    }
-
-    .booking-inner {
-      position: relative;
-      z-index: 2;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .booking-eyebrow {
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 28px;
-    }
-
-    .booking-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 300;
-      color: var(--sand);
-      line-height: 1.1;
-      margin-bottom: 24px;
-    }
-
-    .booking-title em { font-style: italic; }
-
-    .booking-sub {
-      font-size: 0.9rem;
-      color: var(--body);
-      line-height: 1.7;
-      margin-bottom: 52px;
-    }
-
-    .booking-actions {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-large {
-      padding: 20px 56px;
-      font-size: 0.75rem;
-    }
-
-    .contact-info {
-      margin-top: 60px;
-      display: flex;
-      justify-content: center;
-      gap: 60px;
-      flex-wrap: wrap;
-    }
-
-    .contact-item {
-      text-align: center;
-    }
-
-    .contact-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .contact-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      color: var(--sand);
-    }
-
-    /* ── HOURS ── */
-    .hours {
-      background: var(--bg2);
-      padding: 80px 60px;
-      border-top: 1px solid rgba(143,175,138,0.1);
-    }
-
-    .hours-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .hours-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      font-weight: 300;
-      color: var(--sand);
-      margin-bottom: 36px;
-    }
-
-    .hours-list { list-style: none; }
-    .hours-list li {
-      display: flex;
-      justify-content: space-between;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(143,175,138,0.08);
-      font-size: 0.82rem;
-      color: var(--body);
-    }
-    .hours-list li .day { color: var(--sand); }
-
-    .address-block p {
-      font-size: 0.85rem;
-      line-height: 1.9;
-      color: var(--body);
-    }
-
-    .address-block a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 40px 60px;
-      border-top: 1px solid rgba(143,175,138,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .footer-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
-
-    .footer-credit {
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-
-    .footer-credit a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    /* ── MOBILE CTA BAR ── */
-    .mobile-cta {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 200;
-      background: var(--accent);
-      color: var(--bg);
-      text-align: center;
-      padding: 18px;
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding: 20px 24px; }
-      nav.scrolled { padding: 14px 24px; }
-      .nav-links { display: none; }
-      .hero-content { padding: 0 24px; }
-      .hero-scroll-line { left: 24px; }
-      .intro-strip { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
-      .stat-divider { display: none; }
-      .intro-stat { padding: 0; }
-      .services { padding: 80px 24px; }
-      .services-grid { grid-template-columns: 1fr; gap: 2px; }
-      .section-header { flex-direction: column; align-items: flex-start; gap: 20px; }
-      .philosophy { padding: 80px 24px; }
-      .philosophy-inner { grid-template-columns: 1fr; gap: 48px; }
-      .booking { padding: 100px 24px; }
-      .hours { padding: 60px 24px; }
-      .hours-inner { grid-template-columns: 1fr; gap: 48px; }
-      footer { padding: 32px 24px; }
-      .mobile-cta { display: block; }
-      body { padding-bottom: 60px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
-    }
-  </style>
+@media(max-width:960px){
+  nav{padding:20px 24px}
+  nav.solid{padding:14px 24px}
+  .nav-links,.nav-book{display:none}
+  .hero-content,.sp-content,.phil-inner,.book-inner,.hours{padding-left:24px;padding-right:24px}
+  .h-title{font-size:3rem}
+  .sp-content{grid-template-columns:1fr;gap:40px}
+  .sp-num{font-size:4rem;margin-bottom:-20px}
+  .sp-title{font-size:2.2rem}
+  .phil-grid{grid-template-columns:1fr;gap:60px}
+  .book-contact-grid{grid-template-columns:1fr}
+  .hours-inner{grid-template-columns:1fr;gap:60px}
+  footer{padding:28px 24px}
+  .mob-bar{display:block}
+  body{padding-bottom:56px}
+  .hero-phone{right:24px}
+  .scroll-indicator{left:24px}
+  .cursor{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav id="nav">
-    <div class="nav-logo">Bradford <span>Wellness</span> Centre</div>
-    <ul class="nav-links">
-      <li><a href="#services">Services</a></li>
-      <li><a href="#philosophy">About</a></li>
-      <li><a href="#hours">Hours</a></li>
-    </ul>
-    <a href="tel:9057789954" class="nav-cta">Book Now</a>
-  </nav>
+<div class="cursor" id="cur-ring" style="position:fixed;top:0;left:0"><div class="cursor-ring" id="ring"></div></div>
+<div class="cursor" id="cur-dot" style="position:fixed;top:0;left:0"><div class="cursor-dot"></div></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg"></div>
+<nav id="nav">
+  <div class="logo">Bradford <em>Wellness</em> Centre</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#philosophy">About</a></li>
+    <li><a href="#booking">Contact</a></li>
+  </ul>
+  <a href="tel:9057789954" class="nav-book">Book Now</a>
+</nav>
 
-    <!-- Botanical SVG -->
-    <svg class="hero-botanical" viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g stroke="#8FAF8A" stroke-width="1" fill="none">
-        <path d="M300 800 C300 800 280 600 220 500 C160 400 80 380 60 280 C40 180 100 100 200 80 C300 60 380 120 400 220 C420 320 380 420 340 480 C300 540 300 800 300 800Z" opacity="0.8"/>
-        <path d="M300 700 C340 620 420 580 460 500 C500 420 480 340 440 280" opacity="0.6"/>
-        <path d="M300 650 C260 580 180 560 140 480 C100 400 120 320 160 260" opacity="0.5"/>
-        <ellipse cx="200" cy="200" rx="60" ry="30" transform="rotate(-30 200 200)" opacity="0.4"/>
-        <ellipse cx="400" cy="300" rx="50" ry="25" transform="rotate(20 400 300)" opacity="0.4"/>
-        <ellipse cx="160" cy="380" rx="45" ry="22" transform="rotate(-15 160 380)" opacity="0.35"/>
-        <ellipse cx="440" cy="460" rx="55" ry="28" transform="rotate(25 440 460)" opacity="0.35"/>
-        <path d="M300 500 C360 460 420 420 460 360" stroke-dasharray="4 8" opacity="0.3"/>
-        <path d="M300 500 C240 460 180 420 140 360" stroke-dasharray="4 8" opacity="0.3"/>
-        <circle cx="300" cy="120" r="8" opacity="0.5"/>
-        <circle cx="460" cy="300" r="5" opacity="0.4"/>
-        <circle cx="140" cy="380" r="6" opacity="0.4"/>
-      </g>
-    </svg>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-layer layer-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-    <div class="hero-content">
-      <p class="hero-eyebrow" id="hero-eyebrow">Bradford, Ontario · Est. 2018</p>
-      <h1 class="hero-title" id="hero-title">
-        Healing that<br>
-        <em>honours the body</em><br>
-        as a whole
-      </h1>
-      <p class="hero-sub" id="hero-sub">
-        Therapeutic massage, osteopathic care, chiropractic treatment, acupuncture, and homeopathic remedies — all under one roof.
-      </p>
-      <div class="hero-actions" id="hero-actions">
-        <a href="tel:9057789954" class="btn-primary">Book an Appointment</a>
-        <a href="#services" class="btn-ghost">Our Services</a>
-      </div>
-    </div>
+  <!-- Large botanical SVG - parallax layer -->
+  <svg class="botanical-art" id="bot-art" viewBox="0 0 700 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g stroke="#7A9E82" fill="none">
+      <path d="M350 900 C350 750 320 650 260 550 C200 450 110 420 80 310 C50 200 120 110 230 90 C340 70 440 140 460 260 C480 380 430 480 390 560 C350 640 350 900 350 900Z" stroke-width="1.2" opacity="0.9"/>
+      <path d="M350 800 C400 700 490 660 530 570 C570 480 550 380 500 310" stroke-width="0.8" opacity="0.7"/>
+      <path d="M350 720 C295 640 205 615 165 525 C125 435 145 345 195 285" stroke-width="0.8" opacity="0.65"/>
+      <path d="M350 640 C420 600 480 540 510 460" stroke-width="0.6" stroke-dasharray="6 12" opacity="0.45"/>
+      <path d="M350 640 C280 600 220 540 190 460" stroke-width="0.6" stroke-dasharray="6 12" opacity="0.45"/>
+      <ellipse cx="240" cy="220" rx="80" ry="38" transform="rotate(-35 240 220)" stroke-width="0.8" opacity="0.55"/>
+      <ellipse cx="460" cy="340" rx="68" ry="32" transform="rotate(22 460 340)" stroke-width="0.8" opacity="0.55"/>
+      <ellipse cx="190" cy="440" rx="58" ry="28" transform="rotate(-18 190 440)" stroke-width="0.7" opacity="0.5"/>
+      <ellipse cx="510" cy="520" rx="72" ry="34" transform="rotate(28 510 520)" stroke-width="0.7" opacity="0.5"/>
+      <ellipse cx="290" cy="580" rx="50" ry="24" transform="rotate(-10 290 580)" stroke-width="0.6" opacity="0.4"/>
+      <!-- vein lines on leaves -->
+      <path d="M240 220 C260 200 270 180 265 155" stroke-width="0.4" opacity="0.4"/>
+      <path d="M460 340 C475 320 480 295 472 270" stroke-width="0.4" opacity="0.4"/>
+      <!-- small detail circles -->
+      <circle cx="350" cy="100" r="10" stroke-width="0.8" opacity="0.6"/>
+      <circle cx="350" cy="100" r="4" stroke-width="0.6" opacity="0.5"/>
+      <circle cx="530" cy="480" r="6" stroke-width="0.6" opacity="0.45"/>
+      <circle cx="170" cy="500" r="7" stroke-width="0.6" opacity="0.45"/>
+      <!-- fine roots at bottom -->
+      <path d="M350 870 C330 850 310 840 280 845" stroke-width="0.5" opacity="0.35"/>
+      <path d="M350 870 C370 850 390 838 420 842" stroke-width="0.5" opacity="0.35"/>
+      <path d="M350 880 C340 870 320 865 300 870" stroke-width="0.4" opacity="0.3"/>
+    </g>
+  </svg>
 
-    <div class="hero-scroll-line" id="hero-scroll">
-      <div class="scroll-bar"></div>
-      <span>Scroll</span>
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- STATS -->
-  <div class="intro-strip">
-    <div class="intro-stat">
-      <div class="stat-number" data-target="5">5</div>
-      <div class="stat-label">Specialised Treatments</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="intro-stat">
-      <div class="stat-number">10+</div>
-      <div class="stat-label">Years Serving Bradford</div>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="intro-stat">
-      <div class="stat-number">6</div>
-      <div class="stat-label">Days a Week</div>
+  <div class="hero-content">
+    <p class="h-eyebrow" id="he">Bradford, Ontario</p>
+    <h1 class="h-title" id="ht">Healing that<br><em>listens</em> to<br>the body</h1>
+    <p class="h-body" id="hb">Five specialist disciplines. One integrated approach. Care that begins where templates end.</p>
+    <div class="h-actions" id="ha">
+      <a href="tel:9057789954" class="btn-fill">Book an Appointment</a>
+      <a href="#services" class="btn-line"><span class="btn-line-bar"></span>View Services</a>
     </div>
   </div>
 
-  <div class="section-divider"></div>
+  <div class="hero-phone" id="hp">
+    <div class="hero-phone-label">Call Direct</div>
+    <a href="tel:9057789954" class="hero-phone-num">(905) 778-9954</a>
+  </div>
 
-  <!-- SERVICES -->
-  <section class="services" id="services">
-    <div class="section-header">
-      <div>
-        <p class="section-eyebrow">What We Offer</p>
-        <h2 class="section-title">Treatments <em>tailored<br>to you</em></h2>
+  <div class="scroll-indicator" id="si">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span class="marquee-item">Therapeutic Massage</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Osteopathic Care</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Chiropractic Treatment</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Acupuncture</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Homeopathic Remedies</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Bradford, Ontario</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Therapeutic Massage</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Osteopathic Care</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Chiropractic Treatment</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Acupuncture</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Homeopathic Remedies</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Bradford, Ontario</span><span class="marquee-dot">·</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="services-section" id="services">
+
+  <div class="service-panel">
+    <div class="sp-bg sp-bg-1"></div>
+    <svg class="sp-art" style="right:-80px;top:-40px;width:50vw;max-width:600px" viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g stroke="#7A9E82" fill="none" stroke-width="0.8">
+        <circle cx="250" cy="250" r="180"/><circle cx="250" cy="250" r="120"/><circle cx="250" cy="250" r="60"/>
+        <line x1="70" y1="250" x2="430" y2="250"/><line x1="250" y1="70" x2="250" y2="430"/>
+        <line x1="122" y1="122" x2="378" y2="378"/><line x1="378" y1="122" x2="122" y2="378"/>
+      </g>
+    </svg>
+    <div class="sp-content">
+      <div class="sp-left">
+        <span class="sp-num">01</span>
+        <p class="sp-eyebrow">Treatment</p>
+        <h2 class="sp-title">Therapeutic<br><em>Massage</em></h2>
+        <p class="sp-desc">Specific techniques designed around your desired outcome — whether overused muscles, surgical preparation, post-recovery, or building physical resilience. Not a spa treatment. A clinical one.</p>
+        <a href="tel:9057789954" class="sp-cta">Book This Treatment <span style="font-size:1rem">→</span></a>
       </div>
-    </div>
-
-    <div class="services-grid">
-
-      <div class="service-card">
-        <div class="service-number">01</div>
-        <div class="service-name">Therapeutic Massage</div>
-        <p class="service-desc">Targeted techniques to address overuse, recovery, surgical preparation, and strength — built around your specific outcome.</p>
-        <div class="service-tags">
-          <span class="tag">Soft Tissue</span>
-          <span class="tag">PNF Stretching</span>
-          <span class="tag">Joint Mobilization</span>
+      <div class="sp-right">
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Techniques</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Soft Tissue Mobilization</span>
+            <span class="sp-tag">PNF Stretching</span>
+            <span class="sp-tag">Joint Mobilization</span>
+            <span class="sp-tag">Muscle Energy Techniques</span>
+            <span class="sp-tag">Facilitated Positional Release</span>
+          </div>
         </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-number">02</div>
-        <div class="service-name">Osteopathic Care</div>
-        <p class="service-desc">Manual healing that works with the body's natural structure — addressing root causes through bone, joint, and muscle assessment.</p>
-        <div class="service-tags">
-          <span class="tag">Back Pain</span>
-          <span class="tag">Arthritis</span>
-          <span class="tag">Postural Health</span>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-number">03</div>
-        <div class="service-name">Chiropractic Treatment</div>
-        <p class="service-desc">Spinal alignment and musculoskeletal care that allows the body to heal without surgery or medication.</p>
-        <div class="service-tags">
-          <span class="tag">Spinal Care</span>
-          <span class="tag">Neck Pain</span>
-          <span class="tag">Headaches</span>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-number">04</div>
-        <div class="service-name">Acupuncture</div>
-        <p class="service-desc">Ancient energy pathways, modern application. Fine needles placed to calm the nervous system, ease tension, and restore balance.</p>
-        <div class="service-tags">
-          <span class="tag">Stress Relief</span>
-          <span class="tag">Sleep Quality</span>
-          <span class="tag">Hormonal Balance</span>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-number">05</div>
-        <div class="service-name">Homeopathic Remedies</div>
-        <p class="service-desc">Holistic wellness rooted in the body's own ability to restore harmony — safe for all ages, including pregnancy and breastfeeding.</p>
-        <div class="service-tags">
-          <span class="tag">All Ages</span>
-          <span class="tag">Pregnancy Safe</span>
-          <span class="tag">Complementary Care</span>
-        </div>
-      </div>
-
-      <div class="service-card" style="background: var(--bg3); display:flex; flex-direction:column; justify-content:center; align-items:flex-start;">
-        <p class="section-eyebrow" style="margin-bottom:16px;">Not sure where to start?</p>
-        <p style="font-size:0.85rem; color:var(--body); line-height:1.8; margin-bottom:28px;">Our practitioners will guide you to the right treatment for your specific needs.</p>
-        <a href="tel:9057789954" class="btn-primary">Call Us Today</a>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="section-divider"></div>
-
-  <!-- PHILOSOPHY -->
-  <section class="philosophy" id="philosophy">
-    <div class="philosophy-inner">
-      <div class="philosophy-quote">
-        "We believe the body holds its own intelligence — our role is to create the conditions for it to heal."
-      </div>
-      <div class="philosophy-text">
-        <p>At Bradford Wellness Centre, every treatment begins with listening. Not just to your symptoms, but to the patterns behind them — the way your body moves, compensates, and adapts.</p>
-        <p>Our practitioners work across disciplines so that your care is never siloed. Whether you come in for one session or ongoing support, you leave with a clearer understanding of your own health.</p>
-        <p>Located in the heart of Bradford, we've built a space where clinical precision and personal warmth coexist.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- BOOKING CTA -->
-  <section class="booking" id="booking">
-    <div class="booking-bg"></div>
-    <div class="booking-inner">
-      <p class="booking-eyebrow">Ready to Begin</p>
-      <h2 class="booking-title">Your path to<br><em>feeling better</em><br>starts here.</h2>
-      <p class="booking-sub">Book your appointment today. Same-week availability most weeks.</p>
-      <div class="booking-actions">
-        <a href="tel:9057789954" class="btn-primary btn-large">Call (905) 778-9954</a>
-        <a href="mailto:info@bradfordwellness.ca" class="btn-ghost">Send an Email</a>
-      </div>
-      <div class="contact-info">
-        <div class="contact-item">
-          <div class="contact-label">Phone</div>
-          <div class="contact-value">(905) 778-9954</div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-label">Email</div>
-          <div class="contact-value">info@bradfordwellness.ca</div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-label">Address</div>
-          <div class="contact-value">140 Holland St W, Bradford</div>
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Ideal For</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Athletes</span>
+            <span class="sp-tag">Pre / Post Surgery</span>
+            <span class="sp-tag">Chronic Tension</span>
+            <span class="sp-tag">Injury Recovery</span>
+          </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- HOURS -->
-  <section class="hours" id="hours">
-    <div class="hours-inner">
-      <div>
-        <h3 class="hours-title">Business Hours</h3>
-        <ul class="hours-list">
-          <li><span class="day">Monday</span><span>8:00 AM – 8:30 PM</span></li>
-          <li><span class="day">Tuesday</span><span>8:00 AM – 9:00 PM</span></li>
-          <li><span class="day">Wednesday</span><span>8:00 AM – 9:00 PM</span></li>
-          <li><span class="day">Thursday</span><span>8:00 AM – 9:00 PM</span></li>
-          <li><span class="day">Friday</span><span>8:00 AM – 8:30 PM</span></li>
-          <li><span class="day">Saturday</span><span>9:00 AM – 3:00 PM</span></li>
-          <li><span class="day">Sunday</span><span>Closed</span></li>
-        </ul>
+  <div class="service-panel">
+    <div class="sp-bg sp-bg-2"></div>
+    <svg class="sp-art" style="left:-60px;bottom:-40px;width:45vw;max-width:500px;opacity:0.035" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g stroke="#C4A882" fill="none" stroke-width="0.8">
+        <rect x="50" y="50" width="400" height="400" rx="200"/>
+        <rect x="100" y="100" width="300" height="300" rx="150"/>
+        <rect x="150" y="150" width="200" height="200" rx="100"/>
+        <path d="M250 50 C350 150 350 350 250 450"/><path d="M250 50 C150 150 150 350 250 450"/>
+      </g>
+    </svg>
+    <div class="sp-content">
+      <div class="sp-left">
+        <span class="sp-num">02</span>
+        <p class="sp-eyebrow">Treatment</p>
+        <h2 class="sp-title">Osteopathic<br><em>Care</em></h2>
+        <p class="sp-desc">Manual healing that emphasises the relationship between structure and function. Practitioners assess somatic dysfunction and treat through skilled manipulation of bones, joints, and muscles.</p>
+        <a href="tel:9057789954" class="sp-cta">Book This Treatment <span style="font-size:1rem">→</span></a>
       </div>
-      <div class="address-block">
-        <h3 class="hours-title">Find Us</h3>
-        <p>
-          Unit 4 – 140 Holland Street West<br>
-          Bradford, ON L3Z 2A9<br><br>
-          <a href="tel:9057789954">(905) 778-9954</a><br>
-          <a href="mailto:info@bradfordwellness.ca">info@bradfordwellness.ca</a>
-        </p>
+      <div class="sp-right">
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Conditions Treated</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Back Pain</span>
+            <span class="sp-tag">Arthritis</span>
+            <span class="sp-tag">Tennis Elbow</span>
+            <span class="sp-tag">Digestive Issues</span>
+            <span class="sp-tag">Postural Problems</span>
+            <span class="sp-tag">Sleep Disruption</span>
+          </div>
+        </div>
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Approach</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Whole-Body Assessment</span>
+            <span class="sp-tag">Root Cause Focus</span>
+            <span class="sp-tag">Non-Invasive</span>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-logo">Bradford Wellness Centre © 2025</div>
-    <div class="footer-credit">Created by <a href="mailto:NorthpointDigitalltd@gmail.com">North Point Digital</a></div>
-  </footer>
+  <div class="service-panel">
+    <div class="sp-bg sp-bg-3"></div>
+    <div class="sp-content">
+      <div class="sp-left">
+        <span class="sp-num">03</span>
+        <p class="sp-eyebrow">Treatment</p>
+        <h2 class="sp-title">Chiropractic<br><em>Treatment</em></h2>
+        <p class="sp-desc">Hands-on spinal manipulation to bring proper alignment to the musculoskeletal structure. The body heals itself — when alignment allows it to. No surgery. No medication.</p>
+        <a href="tel:9057789954" class="sp-cta">Book This Treatment <span style="font-size:1rem">→</span></a>
+      </div>
+      <div class="sp-right">
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Treats</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Back Pain</span>
+            <span class="sp-tag">Neck Pain</span>
+            <span class="sp-tag">Headaches</span>
+            <span class="sp-tag">Hand & Foot Problems</span>
+            <span class="sp-tag">Spinal Misalignment</span>
+          </div>
+        </div>
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Method</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Spinal Manipulation</span>
+            <span class="sp-tag">Acupuncture Integration</span>
+            <span class="sp-tag">Overall Health Support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- MOBILE CTA -->
-  <a href="tel:9057789954" class="mobile-cta">Book an Appointment</a>
+  <div class="service-panel">
+    <div class="sp-bg sp-bg-4"></div>
+    <div class="sp-content">
+      <div class="sp-left">
+        <span class="sp-num">04</span>
+        <p class="sp-eyebrow">Treatment</p>
+        <h2 class="sp-title"><em>Acupuncture</em></h2>
+        <p class="sp-desc">Fine needles placed at specific points to influence the nervous system, circulation, and the body's healing responses. Ancient pathways. Measured outcomes.</p>
+        <a href="tel:9057789954" class="sp-cta">Book This Treatment <span style="font-size:1rem">→</span></a>
+      </div>
+      <div class="sp-right">
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Benefits</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Stress Reduction</span>
+            <span class="sp-tag">Muscle Tension Relief</span>
+            <span class="sp-tag">Hormonal Balance</span>
+            <span class="sp-tag">Sleep Quality</span>
+            <span class="sp-tag">Digestive Regulation</span>
+            <span class="sp-tag">Energy Balance</span>
+          </div>
+        </div>
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Approach</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Pattern Assessment</span>
+            <span class="sp-tag">Targeted Point Selection</span>
+            <span class="sp-tag">Nervous System Regulation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    gsap.registerPlugin(ScrollTrigger);
+  <div class="service-panel">
+    <div class="sp-bg sp-bg-5"></div>
+    <div class="sp-content">
+      <div class="sp-left">
+        <span class="sp-num">05</span>
+        <p class="sp-eyebrow">Treatment</p>
+        <h2 class="sp-title">Homeopathic<br><em>Remedies</em></h2>
+        <p class="sp-desc">A holistic approach rooted in the body's innate capacity to restore balance. Remedies selected to reflect the individual's unique physical, emotional, and lifestyle presentation.</p>
+        <a href="tel:9057789954" class="sp-cta">Book This Treatment <span style="font-size:1rem">→</span></a>
+      </div>
+      <div class="sp-right">
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Suitable For</div>
+          <div class="sp-tags">
+            <span class="sp-tag">All Ages</span>
+            <span class="sp-tag">Pregnancy Safe</span>
+            <span class="sp-tag">Breastfeeding Safe</span>
+            <span class="sp-tag">Complementary Care</span>
+          </div>
+        </div>
+        <div class="sp-tag-group">
+          <div class="sp-tag-label">Principles</div>
+          <div class="sp-tags">
+            <span class="sp-tag">Fast & Gentle</span>
+            <span class="sp-tag">Holistic Assessment</span>
+            <span class="sp-tag">Integrative Approach</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    // Nav scroll behavior
-    const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 60);
-    });
+</div>
 
-    // Hero entrance
-    const tl = gsap.timeline({ delay: 0.3 });
-    tl.to('#hero-eyebrow', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', from: { y: 20 } })
-      .to('#hero-title',   { opacity: 1, y: 0, duration: 1,   ease: 'power2.out', from: { y: 30 } }, '-=0.4')
-      .to('#hero-sub',     { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', from: { y: 20 } }, '-=0.5')
-      .to('#hero-actions', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', from: { y: 20 } }, '-=0.4')
-      .to('#hero-scroll',  { opacity: 1, duration: 0.6 }, '-=0.2');
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="philosophy">
+  <div class="phil-bg-orb"></div>
+  <div class="phil-inner">
+    <div class="phil-grid">
+      <div class="phil-sticky">
+        <blockquote class="phil-quote">"The body holds its own intelligence — our role is to create the conditions in which it can heal."</blockquote>
+        <p class="phil-sig">Bradford Wellness Centre</p>
+      </div>
+      <div class="phil-blocks">
+        <div class="phil-block">
+          <p class="phil-block-label">Our Approach</p>
+          <p class="phil-block-text">Every treatment begins with listening — not just to your symptoms, but to the patterns behind them. The way your body moves, compensates, and adapts tells us more than any single complaint.</p>
+        </div>
+        <div class="phil-block">
+          <p class="phil-block-label">Integrated Care</p>
+          <p class="phil-block-text">Our practitioners work across disciplines so your care is never siloed. A chiropractor and an osteopath in the same room, sharing the same patient, is how real outcomes happen.</p>
+        </div>
+        <div class="phil-block">
+          <p class="phil-block-label">The Space</p>
+          <p class="phil-block-text">Located in the heart of Bradford at 140 Holland Street West. A space where clinical precision and personal warmth coexist — because healing demands both.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // Set initial states
-    gsap.set(['#hero-eyebrow','#hero-title','#hero-sub','#hero-actions'], { y: 30 });
+<!-- BOOKING -->
+<section class="booking" id="booking">
+  <svg class="book-bg-art" viewBox="0 0 1400 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g stroke="#7A9E82" fill="none" stroke-width="0.8">
+      <circle cx="700" cy="450" r="350"/><circle cx="700" cy="450" r="250"/><circle cx="700" cy="450" r="150"/><circle cx="700" cy="450" r="50"/>
+      <line x1="350" y1="450" x2="1050" y2="450"/><line x1="700" y1="100" x2="700" y2="800"/>
+      <line x1="453" y1="203" x2="947" y2="697"/><line x1="947" y1="203" x2="453" y2="697"/>
+    </g>
+  </svg>
+  <div class="book-inner">
+    <p class="book-eyebrow">Ready to Begin</p>
+    <h2 class="book-title">Your path to<br><em>feeling better</em><br>starts here.</h2>
+    <p class="book-sub">Same-week availability most weeks. Call us directly or send an email — we'll find a time that works.</p>
+    <div class="book-actions">
+      <a href="tel:9057789954" class="btn-fill" style="padding:18px 52px;font-size:0.72rem">Call (905) 778-9954</a>
+      <a href="mailto:info@bradfordwellness.ca" class="btn-line"><span class="btn-line-bar"></span>Send an Email</a>
+    </div>
+    <div class="book-contact-grid">
+      <div class="bc-item">
+        <div class="bc-label">Phone</div>
+        <div class="bc-val"><a href="tel:9057789954">(905) 778-9954</a></div>
+      </div>
+      <div class="bc-item">
+        <div class="bc-label">Email</div>
+        <div class="bc-val"><a href="mailto:info@bradfordwellness.ca">info@bradfordwellness.ca</a></div>
+      </div>
+      <div class="bc-item">
+        <div class="bc-label">Address</div>
+        <div class="bc-val">140 Holland St W<br>Bradford, ON L3Z 2A9</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // Service cards scroll reveal
-    gsap.utils.toArray('.service-card').forEach((card, i) => {
-      gsap.from(card, {
-        scrollTrigger: { trigger: card, start: 'top 85%' },
-        opacity: 0,
-        y: 40,
-        duration: 0.7,
-        delay: (i % 3) * 0.1,
-        ease: 'power2.out'
-      });
-    });
+<!-- HOURS -->
+<section class="hours" id="hours">
+  <div class="hours-inner">
+    <div>
+      <h3 class="hours-title">Hours</h3>
+      <ul class="hours-list">
+        <li><span class="day">Monday</span><span>8:00 AM – 8:30 PM</span></li>
+        <li><span class="day">Tuesday</span><span>8:00 AM – 9:00 PM</span></li>
+        <li><span class="day">Wednesday</span><span>8:00 AM – 9:00 PM</span></li>
+        <li><span class="day">Thursday</span><span>8:00 AM – 9:00 PM</span></li>
+        <li><span class="day">Friday</span><span>8:00 AM – 8:30 PM</span></li>
+        <li><span class="day">Saturday</span><span>9:00 AM – 3:00 PM</span></li>
+        <li><span class="day">Sunday</span><span class="closed">Closed</span></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="hours-title">Location</h3>
+      <p class="addr">
+        Unit 4 – 140 Holland Street West<br>
+        Bradford, ON L3Z 2A9<br><br>
+        <a href="tel:9057789954">(905) 778-9954</a><br>
+        <a href="mailto:info@bradfordwellness.ca">info@bradfordwellness.ca</a>
+      </p>
+    </div>
+  </div>
+</section>
 
-    // Philosophy reveal
-    gsap.from('.philosophy-quote', {
-      scrollTrigger: { trigger: '.philosophy', start: 'top 70%' },
-      opacity: 0, x: -40, duration: 1, ease: 'power2.out'
-    });
-    gsap.from('.philosophy-text', {
-      scrollTrigger: { trigger: '.philosophy', start: 'top 70%' },
-      opacity: 0, x: 40, duration: 1, ease: 'power2.out', delay: 0.2
-    });
+<footer>
+  <div class="foot-logo">Bradford Wellness Centre © 2025</div>
+  <div class="foot-credit">Created by <a href="mailto:NorthpointDigitalltd@gmail.com">North Point Digital</a></div>
+</footer>
 
-    // Booking reveal
-    gsap.from('.booking-inner', {
-      scrollTrigger: { trigger: '.booking', start: 'top 75%' },
-      opacity: 0, y: 50, duration: 1, ease: 'power2.out'
-    });
+<a href="tel:9057789954" class="mob-bar">Book an Appointment</a>
 
-    // Stats reveal
-    gsap.utils.toArray('.intro-stat').forEach((stat, i) => {
-      gsap.from(stat, {
-        scrollTrigger: { trigger: '.intro-strip', start: 'top 80%' },
-        opacity: 0, y: 20, duration: 0.6, delay: i * 0.15, ease: 'power2.out'
-      });
-    });
-  </script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Nav
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>80));
+
+// Custom cursor
+const ring=document.getElementById('cur-ring');
+const dot=document.getElementById('cur-dot');
+const ringEl=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
+(function animCursor(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animCursor)})();
+document.querySelectorAll('a,button,.service-panel,.sp-cta').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ringEl.classList.add('expand'));
+  el.addEventListener('mouseleave',()=>ringEl.classList.remove('expand'));
+});
+
+// Hero entrance
+gsap.set(['#he','#ht','#hb','#ha'],{y:40,opacity:0});
+gsap.set('#bot-art',{opacity:0,x:60});
+gsap.set(['#hp','#si'],{opacity:0});
+const htl=gsap.timeline({delay:0.2});
+htl.to('#he',{opacity:1,y:0,duration:0.9,ease:'power3.out'})
+   .to('#ht',{opacity:1,y:0,duration:1.1,ease:'power3.out'},'-=0.5')
+   .to('#hb',{opacity:1,y:0,duration:0.9,ease:'power3.out'},'-=0.6')
+   .to('#ha',{opacity:1,y:0,duration:0.8,ease:'power3.out'},'-=0.5')
+   .to('#bot-art',{opacity:1,x:0,duration:1.4,ease:'power3.out'},'-=1.2')
+   .to(['#hp','#si'],{opacity:1,duration:0.8},'-=0.6');
+
+// Botanical parallax on hero scroll
+gsap.to('#bot-art',{
+  yPercent:-20,
+  ease:'none',
+  scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.5}
+});
+
+// Service panels - stagger in
+document.querySelectorAll('.service-panel').forEach((panel,i)=>{
+  const left=panel.querySelector('.sp-left');
+  const right=panel.querySelector('.sp-right');
+  const art=panel.querySelector('.sp-art');
+  gsap.set([left,right],{opacity:0,y:50});
+  if(art)gsap.set(art,{opacity:0,scale:0.92});
+  ScrollTrigger.create({
+    trigger:panel,
+    start:'top 65%',
+    onEnter:()=>{
+      gsap.to(left,{opacity:1,y:0,duration:1,ease:'power3.out'});
+      gsap.to(right,{opacity:1,y:0,duration:1,delay:0.15,ease:'power3.out'});
+      if(art)gsap.to(art,{opacity:0.04,scale:1,duration:1.4,ease:'power3.out'});
+    }
+  });
+});
+
+// Philosophy
+gsap.from('.phil-quote',{
+  scrollTrigger:{trigger:'.philosophy',start:'top 70%'},
+  opacity:0,x:-60,duration:1.2,ease:'power3.out'
+});
+gsap.utils.toArray('.phil-block').forEach((b,i)=>{
+  gsap.from(b,{
+    scrollTrigger:{trigger:b,start:'top 80%'},
+    opacity:0,y:30,duration:0.9,delay:i*0.1,ease:'power3.out'
+  });
+});
+
+// Booking
+gsap.from('.book-inner',{
+  scrollTrigger:{trigger:'.booking',start:'top 70%'},
+  opacity:0,y:60,duration:1.2,ease:'power3.out'
+});
+gsap.utils.toArray('.bc-item').forEach((item,i)=>{
+  gsap.from(item,{
+    scrollTrigger:{trigger:item,start:'top 85%'},
+    opacity:0,y:20,duration:0.7,delay:i*0.1,ease:'power3.out'
+  });
+});
+</script>
 </body>
 </html>
